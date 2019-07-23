@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -79,6 +80,11 @@ func (c *AccessConfig) Session() (*session.Session, error) {
 		}
 	}
 	transport.Proxy = http.ProxyFromEnvironment
+
+	logDebug := os.Getenv("AWS_LOG_DEBUG")
+	if logDebug != "" {
+		config = config.WithLogLevel(aws.LogDebug)
+	}
 
 	opts := session.Options{
 		SharedConfigState: session.SharedConfigEnable,
